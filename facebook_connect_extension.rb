@@ -11,11 +11,31 @@ class FacebookConnectExtension < Spree::Extension
   # def self.require_gems(config)
   #   config.gem "gemname-goes-here", :version => '1.2.3'
   # end
-  
+
   def activate
-    # admin.tabs.add "Facebook Connect", "/admin/facebook_connect", :after => "Layouts", :visibility => [:all]
-    ApplicationController.class_eval do 
-      before_filter :set_facebook_session
+
+    # Add your extension tab to the admin.
+    # Requires that you have defined an admin controller:
+    # app/controllers/admin/yourextension_controller
+    # and that you mapped your admin in config/routes
+
+    #Admin::BaseController.class_eval do
+    #  before_filter :add_yourextension_tab
+    #
+    #  def add_yourextension_tab
+    #    # add_extension_admin_tab takes an array containing the same arguments expected
+    #    # by the tab helper method:
+    #    #   [ :extension_name, { :label => "Your Extension", :route => "/some/non/standard/route" } ]
+    #    add_extension_admin_tab [ :yourextension ]
+    #  end
+    #end
+
+    UserSession.facebook_uid_field = :facebook_id
+    UserSession.facebook_session_key_field = :session_key
+
+    # make your helper avaliable in all views
+    Spree::BaseController.class_eval do
+      # helper YourHelper
     end
   end
 end
